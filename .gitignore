@@ -1,0 +1,27 @@
+*build*
+.mxproject
+*.ioc_backup
+# -------- MDK‑ARM / Keil --------
+MDK-ARM/DebugConfig/
+MDK-ARM/RTE/
+MDK-ARM/CAN/
+*.uvguix.*
+*.uvgui.*
+*.lst
+*.axf
+*.elf
+*.hex
+*.bin
+*.map
+*.dep
+*.bak
+*.log
+
+CMakeCache.txt
+CMakeFiles/
+cmake-build-*/
+CMakePresets.json
+*.cmake
+
+.DS_Store
+Thumbs.db
