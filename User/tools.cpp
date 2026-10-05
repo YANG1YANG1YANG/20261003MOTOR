@@ -5,10 +5,11 @@
 
 
 void motorHandler() {
-    if (motor.has_feedback_==true) {
+    if (motor.has_feedback_ == true) {
         motor.canRxMsgCallback();
     }
 }
+
 void motorSetTorque(float current) {
     motor.setTxCurrent(current, 3);
 }

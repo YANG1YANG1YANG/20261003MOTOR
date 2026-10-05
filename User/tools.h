@@ -14,6 +14,7 @@ extern "C" {
 #endif
 
 void motorHandler(void);
+
 void motorSetTorque(float current);
 #ifdef __cplusplus
 }
