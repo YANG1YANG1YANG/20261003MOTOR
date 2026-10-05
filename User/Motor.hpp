@@ -62,8 +62,17 @@ private:
     // 2. 角度换算 ×360/8192
     // 3. 增量累加 + 过零点环绕修正
     // 4. 折到输出轴(÷ 减速比)
-    static constexpr uint16_t kEncoderRange = 8192;
+    float wrapEncoderDelta(float delta_ecd);
 
+    float limit(float value, float min, float max);
+
+    float scale(float x, float in_scale, float out_scale);
+
+    static constexpr float kEncoderRange = 8192.0f;
+    static constexpr float kEncoderWrapThreshold = 4096.0f;
+    static constexpr float kAmperesMax = 20.0f;
+    static constexpr float kCurrentScale = 16384.0f;
+    static constexpr float kAngleScale = 360.0f;
 };
 
 #endif //CAN_MOTOR_H
