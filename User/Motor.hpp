@@ -6,36 +6,56 @@
 #define CAN_MOTOR_H
 #include "stdint.h"
 #include "stdbool.h"
+#include "pid.h"
+#include "math.h"
 
+#define RAD2DEG  (3.14159265358979323846f / 180.0f)
 
 class Motor {
 public:
-    explicit Motor(float ratio); // ratio = 减速比
+    explicit Motor(float ratio);
 
-    // 入口：CAN 接收中断调用
-    //void canRxMsgCallback(const uint8_t rx_data[8]);
     void canRxMsgCallback();
-
-    // 出口：控制逻辑读取
-    // float angle() const;                // 输出轴角度（度）
-    // float speedRpm() const;             // 转子转速（RPM）
-    // float currentAmps() const;           // 转矩电流（A）
-    // float temperatureC() const;         // 温度（℃）
-    // bool hasFeedback() const;           // 收到过帧？
 
     float angle();        // 输出轴角度（度）
     float speedRpm();     // 转子转速（RPM）
     float currentAmps();  // 转矩电流（A）
     float temperatureC(); // 温度（℃）
     //bool hasFeedback();
-    // 命令：控制逻辑调用，内部限幅
-    void setTxCurrent(float amperes, uint8_t motor_id);
+    void setTxCurrent(float amperes);
 
-    // 命令出口：TIM6 中断取用（HAL 形参非 const）
     uint8_t* getTxData();
 
     uint8_t rx_data_[8] = {};
+    //uint8_t rx_buff_[8] = {};
     volatile bool has_feedback_ = false;
+    volatile bool has_data_=false;
+
+    PID spid,ppid;
+    float target_angle_,fdb_angle_;
+    float target_speed_,current_speed_,feedforward_speed_;
+    float feedforward_intensity_,intensity_;
+    uint8_t motor_id_=3;
+
+    float coeff_feedforwardintensity_;
+
+    typedef enum ControlMethod {
+        POSITION_SPEED,
+        SPEED,
+        TORQUE,
+    } ControlMethod_e;
+
+    ControlMethod_e controlMethod_;
+    void handle();
+    // void setPosition(float target_position,float feedforward_speed,float feedforward_intensity);
+    // void setSpeed(float target_speed, float feedforward_intensity);
+    // void setIntensity(float intensity);
+    //
+    void setPosition();
+    void setSpeed();
+    void setIntensity();
+    void calcFeedforwardIntensity();
+    void stop();
 
 private:
     // ---- 配置 ----
@@ -52,18 +72,25 @@ private:
     float last_ecd_ = 0;    // 上一帧角度，用来求差
     bool received_ = false; // 第一帧特殊处理
 
+    float load_mass_ = 0.1f;
+    float load_dist_ = 0.065;
+
     // ---- 待发送 ----
     uint8_t tx_data_[8] = {};
 
     void processData();
 
-    // ---- TODO: 你来实现 ----
-    // 1. 拆8字节为字段(字节序 + 符号)
-    // 2. 角度换算 ×360/8192
-    // 3. 增量累加 + 过零点环绕修正
-    // 4. 折到输出轴(÷ 减速比)
-    static constexpr uint16_t kEncoderRange = 8192;
+    float wrapEncoderDelta(float delta_ecd);
 
+    float limit(float value, float min, float max);
+
+    float scale(float x, float in_scale, float out_scale);
+
+    static constexpr float kEncoderRange = 8192.0f;
+    static constexpr float kEncoderWrapThreshold = 4096.0f;
+    static constexpr float kAmperesMax = 20.0f;
+    static constexpr float kCurrentScale = 16384.0f;
+    static constexpr float kAngleScale = 360.0f;
 };
 
 #endif //CAN_MOTOR_H

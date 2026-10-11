@@ -26,6 +26,7 @@
 /* USER CODE BEGIN Includes */
 #include "../../User/can_user.h"
 #include "../../User/tools.h"
+#include "stdbool.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -58,7 +59,7 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-float current = 1.0;
+bool stop_flag = false;
 /* USER CODE END 0 */
 
 /**
@@ -68,8 +69,8 @@ float current = 1.0;
 int main(void) {
 
     /* USER CODE BEGIN 1 */
-    motorHandler();
-    motorSetTorque(1.0f);
+    // motorHandler();
+    //motorSetTorque(1.0f);
 
     /* USER CODE END 1 */
 
@@ -109,7 +110,7 @@ int main(void) {
     while (1) {
         /* USER CODE END WHILE */
         motorHandler();
-        motorSetTorque(current);
+        //motorSetTorque(current);
         /* USER CODE BEGIN 3 */
     }
     /* USER CODE END 3 */

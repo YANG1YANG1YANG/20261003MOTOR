@@ -5,11 +5,15 @@
 
 
 void motorHandler() {
-    if (motor.has_feedback_ == true) {
-        motor.canRxMsgCallback();
+    if (stop_flag == true) {
+        motor.stop();
+        return;
+    }
+    if (motor.has_data_ == true) {
+        motor.handle();
     }
 }
 
-void motorSetTorque(float current) {
-    motor.setTxCurrent(current, 3);
-}
+// void motorSetTorque(float current) {
+//     motor.setTxCurrent(current, 3);
+// }
