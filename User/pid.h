@@ -26,5 +26,7 @@ private:
     float kout_;
     float iout_;
     float output_;
+    float last_fdb_;
+    float d_fdb_;
 };
 #endif //PID_PID_H

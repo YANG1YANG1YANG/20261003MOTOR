@@ -21,7 +21,7 @@ void HAL_CAN_RxFifo0MsgPendingCallback(CAN_HandleTypeDef* hcan) {
         if (HAL_CAN_GetRxMessage(hcan,CAN_RX_FIFO0, &rx_header, rx_buffer) == HAL_OK) {
             if (rx_header.StdId == 0x203 && rx_header.IDE == CAN_ID_STD && rx_header.RTR == CAN_RTR_DATA && rx_header.
                 DLC == 8) {
-                memcpy(motor.rx_data_, rx_buffer, sizeof(rx_buffer));
+                memcpy(motor.rx_buff_, rx_buffer, sizeof(rx_buffer));
                 motor.has_data_ = true;
                 motor.has_feedback_ = true;
             }

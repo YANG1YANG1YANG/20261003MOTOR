@@ -19,6 +19,7 @@ void PID::reset() {
     output_ = 0;
     dout_now_ = 0;
     error_ = 0;
+    d_error_ = 0;
 }
 
 float PID::calc(float ref,float fdb) {
@@ -34,8 +35,11 @@ float PID::calc(float ref,float fdb) {
     // dout_now_ = - kd_ * error_d;
     // dout_ = d_filter_k_ * dout_now_ + (1 - d_filter_k_) * dout_;
     //filter before kd
-    d_error_ = d_filter_k_ * (error_-last_error_) + (1-d_filter_k_) * d_error_;
-    dout_ = -kd_ * d_error_;
+    //d_error_ = d_filter_k_ * (error_-last_error_) + (1-d_filter_k_) * d_error_;
+    d_fdb_ = d_filter_k_ * (fdb-last_fdb_) + (1-d_filter_k_) * d_fdb_;
+    last_fdb_ = fdb;
+    // dout_ = -kd_ * d_error_;
+    dout_ = -kd_ * d_fdb_;
     output_ = kout_ + iout_ + dout_;
     if (output_ > out_max_) output_ = out_max_;
     else if (output_ < -out_max_) output_ = -out_max_;
