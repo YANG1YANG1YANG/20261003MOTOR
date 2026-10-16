@@ -35,7 +35,7 @@ public:
 
     uint8_t motor_id_=3;
 
-    float coeff_feedforwardintensity_;
+    float coeff_feedforwardintensity_ = 5.5556;
 
     typedef enum ControlMethod {
         POSITION_SPEED,

@@ -6,7 +6,7 @@
 #include "string.h"
 
 Motor::Motor(float ratio,float load_mass, float load_dist):
-    ratio_(ratio),spid{1.1,0,1.9,0,10,0.1},ppid{16,0,0.015,0,500,0.1},load_mass_(load_mass),load_dist_(load_dist) {}
+    ratio_(ratio),spid{1.1,0,1.9,0,10,0.1},ppid{10,0,0.025,0,500,0.1},load_mass_(load_mass),load_dist_(load_dist) {}
 
 void Motor::canRxMsgCallback() {
     processData();
